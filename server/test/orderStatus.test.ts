@@ -1,5 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { escapeRegex } from "../src/lib/text.js";
+
 import {
   ORDER_STATUSES,
   canTransition,
@@ -68,4 +70,10 @@ test("refund workflow only moves forward", () => {
   assert.ok(!canRefundTransition("Refunded", "Requested"));
   assert.ok(isRefundStatus("Under review"));
   assert.ok(!isRefundStatus("Pending"));
+});
+
+test("escapeRegex makes user input literal", () => {
+     assert.equal(escapeRegex("a.b*c(d)"), "a\\.b\\*c\\(d\\)");
+     assert.ok(new RegExp(escapeRegex("(")).test("a(b"));
+     assert.ok(!new RegExp(escapeRegex("a.c")).test("abc"));
 });
